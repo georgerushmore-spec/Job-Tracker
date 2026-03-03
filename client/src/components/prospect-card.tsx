@@ -1,8 +1,6 @@
 import { useState } from "react";
 import type { Prospect } from "@shared/schema";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ExternalLink, Trash2, Pencil, Flame, ThumbsUp, Minus } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -128,24 +126,6 @@ export function ProspectCard({ prospect }: { prospect: Prospect }) {
             {prospect.notes}
           </p>
         )}
-
-        <div className="flex items-center gap-1.5 pt-1.5 border-t border-border/50">
-          <Checkbox
-            id={`thankyou-${prospect.id}`}
-            checked={prospect.thankYouSent}
-            onCheckedChange={() => {}}
-            className="h-3.5 w-3.5"
-            onClick={(e) => e.stopPropagation()}
-            data-testid={`checkbox-thankyou-${prospect.id}`}
-          />
-          <label
-            htmlFor={`thankyou-${prospect.id}`}
-            className="text-[11px] text-muted-foreground cursor-pointer select-none"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Thank-you sent
-          </label>
-        </div>
       </div>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>

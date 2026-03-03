@@ -37,7 +37,6 @@ export function AddProspectForm({ onSuccess }: { onSuccess?: () => void }) {
       status: "Bookmarked",
       interestLevel: "Medium",
       notes: "",
-      thankYouSent: false,
     },
   });
 

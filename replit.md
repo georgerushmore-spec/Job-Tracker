@@ -19,7 +19,6 @@ client/src/
     prospect-card.tsx         - Compact prospect card with edit/delete, opens edit dialog on click
     add-prospect-form.tsx     - Form dialog for adding new prospects
     edit-prospect-form.tsx    - Form dialog for editing existing prospects (all fields including status)
-    status-filter.tsx         - Status filter placeholder (intentionally disabled)
     ui/                       - shadcn/ui component library
 
 server/
@@ -35,7 +34,7 @@ shared/
 
 ## Database Schema
 
-Single `prospects` table with fields: id, company_name, role_title, job_url, status, interest_level, notes, thank_you_sent, created_at.
+Single `prospects` table with fields: id, company_name, role_title, job_url, status, interest_level, notes, created_at.
 
 Valid statuses: Bookmarked, Applied, Phone Screen, Interviewing, Offer, Rejected, Withdrawn
 Valid interest levels: High, Medium, Low
@@ -44,9 +43,6 @@ Valid interest levels: High, Medium, Low
 
 - **Kanban board layout** - 7 columns (one per status), horizontally scrollable, cards sorted within columns
 - **Editable prospects** - clicking a card opens an edit dialog to change any field including status
-- **StatusFilter component exists** but is intentionally disabled - placeholder for students to implement
-- **thank_you_sent checkbox is rendered but intentionally inert** on frontend - students wire it up
-- **PATCH route already handles thank_you_sent -> getNextStatus logic** on the backend
 - **prospect-helpers.ts** exports pure functions for testability
 - Pipeline logic: getNextStatus advances status linearly, skips terminal statuses (Offer, Rejected, Withdrawn)
 
@@ -54,7 +50,7 @@ Valid interest levels: High, Medium, Low
 
 - GET /api/prospects - all prospects, ordered by created_at DESC
 - POST /api/prospects - create prospect (validates with Zod)
-- PATCH /api/prospects/:id - partial update, auto-advances status on thank_you_sent, validates status/interestLevel
+- PATCH /api/prospects/:id - partial update, validates status/interestLevel
 - DELETE /api/prospects/:id - delete prospect
 
 ## Running

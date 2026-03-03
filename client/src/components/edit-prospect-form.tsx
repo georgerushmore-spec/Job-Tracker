@@ -42,7 +42,6 @@ export function EditProspectForm({ prospect, onSuccess }: EditProspectFormProps)
       status: prospect.status as InsertProspect["status"],
       interestLevel: prospect.interestLevel as InsertProspect["interestLevel"],
       notes: prospect.notes ?? "",
-      thankYouSent: prospect.thankYouSent,
     },
   });
 

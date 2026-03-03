@@ -2,7 +2,6 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProspectSchema, STATUSES, INTEREST_LEVELS } from "@shared/schema";
-import { getNextStatus } from "./prospect-helpers";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -54,14 +53,6 @@ export async function registerRoutes(
         return res.status(400).json({ message: `Interest level must be one of: ${INTEREST_LEVELS.join(", ")}` });
       }
       updates.interestLevel = level;
-    }
-
-    const thankYouValue = body.thankYouSent ?? body.thank_you_sent;
-    if (thankYouValue !== undefined) {
-      updates.thankYouSent = thankYouValue;
-      if (thankYouValue === true && !existing.thankYouSent) {
-        updates.status = getNextStatus(existing.status);
-      }
     }
 
     const updated = await storage.updateProspect(id, updates);
