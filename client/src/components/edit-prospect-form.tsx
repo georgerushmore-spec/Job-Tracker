@@ -41,6 +41,7 @@ export function EditProspectForm({ prospect, onSuccess }: EditProspectFormProps)
       jobUrl: prospect.jobUrl ?? "",
       status: prospect.status as InsertProspect["status"],
       interestLevel: prospect.interestLevel as InsertProspect["interestLevel"],
+      salary: prospect.salary ?? undefined,
       notes: prospect.notes ?? "",
     },
   });
@@ -102,6 +103,35 @@ export function EditProspectForm({ prospect, onSuccess }: EditProspectFormProps)
                   {...field}
                   value={field.value ?? ""}
                   data-testid="input-edit-job-url"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="salary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Target Salary (optional)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="e.g. 120000"
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      field.onChange(null);
+                    } else {
+                      const num = Number(val);
+                      field.onChange(Number.isNaN(num) ? null : Math.round(num));
+                    }
+                  }}
+                  data-testid="input-edit-salary"
                 />
               </FormControl>
               <FormMessage />
