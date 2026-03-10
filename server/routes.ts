@@ -44,6 +44,14 @@ export async function registerRoutes(
       }
       updates.salary = body.salary;
     }
+    if (body.deadline !== undefined) {
+      if (body.deadline !== null) {
+        if (typeof body.deadline !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(body.deadline) || isNaN(Date.parse(body.deadline))) {
+          return res.status(400).json({ message: "Deadline must be a valid date in YYYY-MM-DD format or null" });
+        }
+      }
+      updates.deadline = body.deadline;
+    }
     if (body.notes !== undefined) updates.notes = body.notes;
 
     if (body.status !== undefined) {
