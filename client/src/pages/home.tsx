@@ -46,10 +46,16 @@ function KanbanColumn({
   interestFilter: string;
   onInterestFilterChange: (value: string) => void;
 }) {
-  const filtered =
+  const filtered = (
     interestFilter === "All"
       ? prospects
-      : prospects.filter((p) => p.interestLevel === interestFilter);
+      : prospects.filter((p) => p.interestLevel === interestFilter)
+  ).slice().sort((a, b) => {
+    if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
+    if (a.deadline) return -1;
+    if (b.deadline) return 1;
+    return 0;
+  });
 
   return (
     <div

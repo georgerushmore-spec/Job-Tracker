@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { Prospect } from "@shared/schema";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Trash2, Pencil, Flame, ThumbsUp, Minus, DollarSign } from "lucide-react";
+import { ExternalLink, Trash2, Pencil, Flame, ThumbsUp, Minus, DollarSign, Clock } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { differenceInDays, parseISO, format } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +40,43 @@ function InterestIndicator({ level }: { level: string }) {
     default:
       return null;
   }
+}
+
+function DeadlineBadge({ deadline }: { deadline: string }) {
+  const deadlineDate = parseISO(deadline);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysUntil = differenceInDays(deadlineDate, today);
+  const formattedDate = format(deadlineDate, "MMM d");
+
+  let colorClass: string;
+  let label: string;
+  let strikethrough = false;
+
+  if (daysUntil < 0) {
+    colorClass = "text-muted-foreground";
+    label = `Past (${formattedDate})`;
+    strikethrough = true;
+  } else if (daysUntil <= 2) {
+    colorClass = "text-red-500 dark:text-red-400";
+    label = daysUntil === 0 ? `Today` : daysUntil === 1 ? `Tomorrow` : `${daysUntil}d (${formattedDate})`;
+  } else if (daysUntil <= 6) {
+    colorClass = "text-yellow-500 dark:text-yellow-400";
+    label = `${daysUntil}d (${formattedDate})`;
+  } else {
+    colorClass = "text-green-500 dark:text-green-400";
+    label = `${daysUntil}d (${formattedDate})`;
+  }
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-xs font-medium ${colorClass} ${strikethrough ? "line-through" : ""}`}
+      data-testid="deadline-badge"
+    >
+      <Clock className="w-3 h-3" />
+      {label}
+    </span>
+  );
 }
 
 export function ProspectCard({ prospect }: { prospect: Prospect }) {
@@ -105,6 +143,7 @@ export function ProspectCard({ prospect }: { prospect: Prospect }) {
 
         <div className="flex items-center gap-1.5 flex-wrap">
           <InterestIndicator level={prospect.interestLevel} />
+          {prospect.deadline && <DeadlineBadge deadline={prospect.deadline} />}
         </div>
 
         {prospect.salary != null && (

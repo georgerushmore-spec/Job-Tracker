@@ -23,7 +23,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Loader2, CalendarIcon, X } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function AddProspectForm({ onSuccess }: { onSuccess?: () => void }) {
   const { toast } = useToast();
@@ -37,6 +45,7 @@ export function AddProspectForm({ onSuccess }: { onSuccess?: () => void }) {
       status: "Bookmarked",
       interestLevel: "Medium",
       salary: undefined,
+      deadline: undefined,
       notes: "",
     },
   });
@@ -130,6 +139,59 @@ export function AddProspectForm({ onSuccess }: { onSuccess?: () => void }) {
                   data-testid="input-salary"
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="deadline"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Application Deadline (optional)</FormLabel>
+              <div className="flex items-center gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          "flex-1 pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                        data-testid="input-deadline"
+                      >
+                        {field.value ? format(parseISO(field.value), "PPP") : "Pick a date"}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value ? parseISO(field.value) : undefined}
+                      onSelect={(date) =>
+                        field.onChange(date ? format(date, "yyyy-MM-dd") : null)
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {field.value && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={() => field.onChange(null)}
+                    data-testid="clear-deadline"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
